@@ -9,10 +9,8 @@ import com.moez.QKSMS.R;
 import com.moez.QKSMS.ui.MainActivity;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public abstract class DateFormatter {
 
@@ -57,18 +55,16 @@ public abstract class DateFormatter {
         // In the same week
         formatter = new SimpleDateFormat("w, y");
         if (formatter.format(date).equals(formatter.format(System.currentTimeMillis()))) {
-            return DateFormat.getDateInstance(DateFormat.DAY_OF_WEEK_FIELD, Locale.getDefault()).format(date) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
+            return DateUtils.formatDateTime(context, date, DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_ALL) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
         }
 
         // In the same year
         formatter = new SimpleDateFormat("y");
         if (formatter.format(date).equals(formatter.format(System.currentTimeMillis()))) {
-            SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
-            sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", "")); // trim the year off of the date
-            return sdf.format(date) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
+            return DateUtils.formatDateTime(context, date, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_ALL) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
         }
 
-        return DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault()).format(date) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
+        return DateUtils.formatDateTime(context, date, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL) + new SimpleDateFormat(isUsing24HourTime ? ", H:mm" : ", h:mm a").format(date);
     }
 
     public static String getDate(Context context, long date) {
